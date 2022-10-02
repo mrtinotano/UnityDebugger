@@ -21,6 +21,7 @@ namespace Debugger.Profiler
         private ProfilerRecorder profilerUsedMemoryRecorder;
         private ProfilerRecorder profilerReservedMemoryRecorder;
         private ProfilerRecorder systemUsedMemoryRecorder;
+#if DEBUG
         private ProfilerRecorder textureRecorder;
         private ProfilerRecorder textureMemoryRecorder;
         private ProfilerRecorder meshRecorder;
@@ -35,6 +36,7 @@ namespace Debugger.Profiler
         private ProfilerRecorder objectRecorder;
         private ProfilerRecorder gCAllocationRecorder;
         private ProfilerRecorder gCAllocatedRecorder;
+#endif
 
         void OnEnable()
         {
@@ -120,6 +122,7 @@ namespace Debugger.Profiler
             sb.AppendLine($"Profiler: {profilerReservedMemoryRecorder.LastValue / (1024 * 1024)} MB");
             
             sb.AppendLine($"System: {systemUsedMemoryRecorder.LastValue / (1024 * 1024)} MB");
+#if DEBUG
             sb.AppendLine();
             
             sb.AppendLine($"Textures: {textureRecorder.LastValue} / {textureMemoryRecorder.LastValue / (1024 * 1024)} MB");
@@ -133,7 +136,7 @@ namespace Debugger.Profiler
             sb.AppendLine();
 
             sb.AppendLine($"GC Allocation In Frame: {gCAllocationRecorder.LastValue} / {gCAllocatedRecorder.LastValue / (1024 * 1024)} MB");
-
+#endif
             return sb.ToString();
         }
     }

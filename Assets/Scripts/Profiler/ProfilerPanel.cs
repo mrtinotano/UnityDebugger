@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Unity.Profiling;
 using Unity.Profiling.LowLevel.Unsafe;
 using System.Text;
@@ -12,7 +13,8 @@ namespace Debugger.Profiler
     public class ProfilerPanel : MonoBehaviour
     {
         [SerializeField] private Profiler defaultProfiler;
-        [SerializeField] private TextMeshProUGUI statsText;
+        //[SerializeField] private TextMeshProUGUI statsText;
+        [SerializeField] private Text statsText;
 
         Profiler currentProfiler;
 

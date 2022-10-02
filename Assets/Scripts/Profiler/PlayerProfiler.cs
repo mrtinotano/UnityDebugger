@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using System.Text;
 using Unity.Profiling;
 using UnityEngine.LowLevel;
+using UnityEngine.Profiling;
 
 namespace Debugger.Profiler
 {
     public class PlayerProfiler : Profiler
     {
         private ProfilerRecorder mainThreadRecorder;
+
+        private List<int> parentsCacheList = new List<int>();
+        private List<int> childrenCacheList = new List<int>();
 
         void OnEnable()
         {
@@ -22,6 +26,8 @@ namespace Debugger.Profiler
 
         public override string GetInfo()
         {
+            Sampler s = Sampler.Get("PlayerLoop");
+            Recorder rec = s.GetRecorder();
             var sb = new StringBuilder();
             sb.AppendLine($"Frame Time: {GetRecorderAverage(mainThreadRecorder) * (1e-6f):F1} ms");
             //sb.AppendLine(GetPlayerLoop());
@@ -51,20 +57,21 @@ namespace Debugger.Profiler
 
             var sb = new StringBuilder();
 
-            PlayerLoopSubSystemAsText(playerLoop, ref sb);
+            PlayerLoopSubSystemAsText(playerLoop, sb);
 
             return sb.ToString();
         }
 
-        private void PlayerLoopSubSystemAsText(PlayerLoopSystem system, ref StringBuilder playerLoopText)
+        private void PlayerLoopSubSystemAsText(PlayerLoopSystem system, StringBuilder playerLoopText)
         {
             if (system.subSystemList == null)
                 return;
 
             foreach (PlayerLoopSystem subSystem in system.subSystemList)
             {
-                playerLoopText.AppendLine($"\t{subSystem.ToString()}");
-                PlayerLoopSubSystemAsText(subSystem, ref playerLoopText);
+                Sampler sampler = Sampler.Get(subSystem.type.FullName);
+                playerLoopText.AppendLine($"\t{subSystem.type.Name}");
+                PlayerLoopSubSystemAsText(subSystem, playerLoopText);
             }
         }
     }
